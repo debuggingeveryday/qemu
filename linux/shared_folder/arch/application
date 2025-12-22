@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+// application.php
+
+require __DIR__.'/vendor/autoload.php';
+
+use App\Command\Core;
+use App\Command\GeneratePackage;
+use Symfony\Component\Console\Application;
+
+$application = new Application('Arch Linux Installation');
+$application->add(new Core);
+$application->add(new GeneratePackage);
+
+try {
+    $application->run();
+} catch (\Exception $e) {
+    // Handle application's exceptions
+}
