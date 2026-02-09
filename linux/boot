@@ -4,25 +4,33 @@
 
 # ISO=archlinux-2024.05.01-x86_64.iso
 
-ISO=./archiso/output_iso/archlinux-2024.06.10-x86_64.iso # my archlinux iso test image
+# ISO=./archiso/output_iso/archlinux-2024.06.10-x86_64.iso # my archlinux iso test image
+ISO="../ISO/archiso/archlinux-2026.01.11-x86_64.iso"
 
 if [[ "$1" == "efi" ]]; then
 
-qemu-system-x86_64 -enable-kvm \
-    -bios /usr/share/edk2-ovmf/x64/OVMF.fd \
+  qemu-system-x86_64 -enable-kvm \
+    -bios /usr/share/edk2-ovmf/x64/OVMF.4m.fd \
     -cdrom $ISO \
     -boot menu=on \
-    -drive file=Image.img \
     -m 4G \
     -cpu host \
     -vga virtio \
     -display sdl,gl=on \
     -serial none \
     -smp cores=2 \
+    -fsdev local,id=fsdev0,path=./shared_folder,security_model=passthrough \
+    -device virtio-9p-pci,fsdev=fsdev0,mount_tag=host_share \
+    -drive file=Image.img,if=none,id=NVME1 \
+    -device nvme,drive=NVME1,serial=nvme-1 \
+    -usb \
+    -device usb-ehci,id=ehci \
+    -device usb-host,bus=usb-bus.0,hostbus=3,hostport=1 \
+    -device usb-host,bus=ehci.0,hostbus=1,hostport=1
 
 elif [[ "$1" == "bios" ]]; then
 
-qemu-system-x86_64 -enable-kvm \
+  qemu-system-x86_64 -enable-kvm \
     -cdrom $ISO \
     -boot menu=on \
     -drive file=Image.img \
@@ -31,8 +39,8 @@ qemu-system-x86_64 -enable-kvm \
     -vga virtio \
     -display sdl,gl=on \
     -serial none \
-    -smp cores=2 \
+    -smp cores=2
 
 else
-    echo "$1 not available"
+  echo "$1 not available"
 fi
