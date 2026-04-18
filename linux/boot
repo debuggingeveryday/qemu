@@ -5,7 +5,7 @@
 # ISO=archlinux-2024.05.01-x86_64.iso
 
 # ISO=./archiso/output_iso/archlinux-2024.06.10-x86_64.iso # my archlinux iso test image
-ISO="../ISO/archiso/archlinux-2026.01.11-x86_64.iso"
+ISO="../ISO/archiso/archlinux-2026.04.14-x86_64.iso"
 
 if [[ "$1" == "efi" ]]; then
 
@@ -26,7 +26,11 @@ if [[ "$1" == "efi" ]]; then
     -usb \
     -device usb-ehci,id=ehci \
     -device usb-host,bus=usb-bus.0,hostbus=3,hostport=1 \
-    -device usb-host,bus=ehci.0,hostbus=1,hostport=1
+    -device usb-host,bus=ehci.0,hostbus=1,hostport=NVME \
+    -audiodev pa,id=snd0 \
+    -device ich9-intel-hda \
+    -device hda-duplex,audiodev=snd0 \
+    -device usb-host,bus=ehci.0,vendorid=0x0c45,productid=0x4653
 
 elif [[ "$1" == "bios" ]]; then
 
