@@ -30,7 +30,7 @@ if [[ "$1" == "efi" ]]; then
     -audiodev pa,id=snd0 \
     -device ich9-intel-hda \
     -device hda-duplex,audiodev=snd0 \
-    -device usb-host,bus=ehci.0,vendorid=0x0c45,productid=0x4653
+    -device usb-host,vendorid=0x0c45,productid=0x4653
 
 elif [[ "$1" == "bios" ]]; then
 
